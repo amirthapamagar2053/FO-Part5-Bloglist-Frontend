@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import Logout from "./components/Logout";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -22,6 +23,11 @@ const App = () => {
       setUser(user);
     }
   }, []);
+
+  const clearStorage = () => {
+    window.localStorage.clear();
+    setUser(null);
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -77,17 +83,7 @@ const App = () => {
     return (
       <div>
         <h2>blogs</h2>
-        <p>
-          {user.name} logged in{" "}
-          <button
-            onClick={() => {
-              window.localStorage.clear();
-              setUser(null);
-            }}
-          >
-            Log Out
-          </button>
-        </p>
+        <Logout user={user} clearStorage={clearStorage} />
         {blogs
           .filter((blog) => blog.user.username === user.username)
           .map((blog) => (
