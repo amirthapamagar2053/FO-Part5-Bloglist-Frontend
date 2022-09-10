@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import Togglable from "./components/Togglable";
+import NoteForm from "./components/NoteForm";
 import Blog from "./components/Blog";
 import Logout from "./components/Logout";
 import Notification from "./components/Notification";
@@ -9,9 +11,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
   // const [message, setErrorMessage] = useState("");
   const [notification, setNotification] = useState(null);
   const [classStatus, setStatus] = useState("");
@@ -36,21 +35,21 @@ const App = () => {
     setUser(null);
   };
 
-  const handleCreate = async (event) => {
-    event.preventDefault();
+  const handleCreate = async (newObj) => {
+    // event.preventDefault();
     try {
-      const newObj = {
-        title,
-        author,
-        url,
-      };
+      // const newObj = {
+      //   title,
+      //   author,
+      //   url,
+      // };
       const newBlog = await blogService.create(newObj);
       console.log(newBlog);
       setBlogs([...blogs, newBlog]);
       setNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`);
-      setTitle("");
-      setAuthor("");
-      setUrl("");
+      // setTitle("");
+      // setAuthor("");
+      // setUrl("");
       setStatus("message");
       setTimeout(() => {
         setNotification(null);
@@ -91,6 +90,7 @@ const App = () => {
       <div>
         <h2>Log in to application</h2>
         <Notification classStatus={classStatus} notification={notification} />
+
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -121,35 +121,13 @@ const App = () => {
       <div>
         <h2>blogs</h2>
         <Notification classStatus={classStatus} notification={notification} />
+
         <Logout user={user} clearStorage={clearStorage} />
-        <h2>create new</h2>
-        <form onSubmit={handleCreate}>
-          <div>
-            Title:
-            <input
-              type="text"
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </div>
-          <div>
-            Author:
-            <input
-              type="text"
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </div>
-          <div>
-            Url:
-            <input
-              type="text"
-              value={url}
-              onChange={({ target }) => setUrl(target.value)}
-            />
-          </div>
-          <button type="submit">Create</button>
-        </form>
+
+        <Togglable buttonLabel="New Note">
+          <NoteForm handleCreate={handleCreate} />
+        </Togglable>
+
         {blogs
           // .filter((blog) => blog.user.username === user.username)
           .map((blog) => (
