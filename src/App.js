@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Togglable from "./components/Togglable";
 import NoteForm from "./components/NoteForm";
 import Blog from "./components/Blog";
@@ -15,6 +15,7 @@ const App = () => {
   const [notification, setNotification] = useState(null);
   const [classStatus, setStatus] = useState("");
   const [user, setUser] = useState(null);
+  const noteFormRef = useRef();
 
   useEffect(() => {
     console.log("the useeffect entered");
@@ -36,9 +37,9 @@ const App = () => {
   };
 
   const handleCreate = async (newObj) => {
-    // event.preventDefault();
+    // event.preventDefault(); // used for the form submission
     try {
-      // const newObj = {
+      // const newObj = { //for creation of new blog
       //   title,
       //   author,
       //   url,
@@ -47,9 +48,9 @@ const App = () => {
       console.log(newBlog);
       setBlogs([...blogs, newBlog]);
       setNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`);
-      // setTitle("");
-      // setAuthor("");
-      // setUrl("");
+      // setTitle(""); //Moved to NoteForm Component
+      // setAuthor(""); //Moved to NoteForm Component
+      // setUrl("");  //Moved to NoteForm Component
       setStatus("message");
       setTimeout(() => {
         setNotification(null);
@@ -128,11 +129,13 @@ const App = () => {
           <NoteForm handleCreate={handleCreate} />
         </Togglable>
 
-        {blogs
-          // .filter((blog) => blog.user.username === user.username)
-          .map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+        <Togglable ref={noteFormRef}>
+          {blogs
+            // .filter((blog) => blog.user.username === user.username)
+            .map((blog) => (
+              <Blog key={blog.id} blog={blog} />
+            ))}
+        </Togglable>
       </div>
     );
   }
