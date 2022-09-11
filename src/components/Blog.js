@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 const Blog = ({ blog }) => {
+  const [view, setView] = useState(false);
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -6,12 +10,33 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
+
+  const showDetails = {display: view ? "":"none"};
+  const handleView =() => setView(!view)
+  
+  const buttonView = view ? "hide":"view"
   return (
+    <>
     <div style={blogStyle}>
       <div>
-        {blog.title} {blog.author}
+        {blog.title} - {blog.author}
+        <button onClick={handleView} id="view-button">
+            {buttonView}
+          </button>
+      </div>
+      <div style={showDetails}>
+        <p>{blog.url}</p>
+        <p>
+          {blog.likes}{" "}
+          <button id="like-button">
+            like
+          </button>
+          <p>{blog.user.username} </p>
+        </p>
       </div>
     </div>
+    
+    </>
   );
 };
 export default Blog;
