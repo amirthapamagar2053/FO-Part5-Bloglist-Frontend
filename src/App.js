@@ -85,6 +85,17 @@ const App = () => {
     }
   };
 
+  const handleLikeBlog = async (id) => {
+    const blog = blogs.find((blog) => blog.id === id); // Finding the id from the blog like button
+    const updatedObject = { ...blog, likes: blog.likes + 1 };//Updating the targeted blog
+    try {
+      const result = await blogService.update(id, updatedObject);
+      setBlogs(blogs.map((blog) => (blog.id === result.id ? result : blog))); //Sending the update blog in the blogs State
+    } catch (exception) {
+      setNotification(`${exception.response.data.error}`);
+    }
+  };
+
   if (user === null) {
     console.log("the null entered", user);
     return (
@@ -131,8 +142,8 @@ const App = () => {
 
           {blogs
             // .filter((blog) => blog.user.username === user.username)
-            .map((blog) => (
-              <Blog key={blog.id} blog={blog} />
+            .sort((a, b) => b.likes - a.likes).map((blog) => (
+              <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog}/>
             ))}
       </div>
     );
