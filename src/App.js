@@ -88,7 +88,7 @@ const App = () => {
 
   const handleLikeBlog = async (id) => {
     const blog = blogs.find((blog) => blog.id === id); // Finding the id from the blog like button
-    const updatedObject = { ...blog, likes: blog.likes + 1 };//Updating the targeted blog
+    const updatedObject = { ...blog, likes: blog.likes + 1 }; //Updating the targeted blog
     try {
       const result = await blogService.update(id, updatedObject);
       setBlogs(blogs.map((blog) => (blog.id === result.id ? result : blog))); //Sending the update blog in the blogs State
@@ -107,7 +107,7 @@ const App = () => {
       try {
         console.log("inside");
         const response = await blogService.remove(id);
-        console.log(response)
+        console.log(response);
         setBlogs(blogs.filter((b) => b.id !== id));
       } catch (exception) {
         setNotification(`${exception.response.data.error}`);
@@ -159,11 +159,17 @@ const App = () => {
           <NoteForm handleCreate={handleCreate} />
         </Togglable>
 
-          {blogs
-            // .filter((blog) => blog.user.username === user.username)
-            .sort((a, b) => b.likes - a.likes).map((blog) => (
-              <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} handleDeleteBlog={handleDeleteBlog}/>
-            ))}
+        {blogs
+          // .filter((blog) => blog.user.username === user.username)
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLikeBlog={handleLikeBlog}
+              handleDeleteBlog={handleDeleteBlog}
+            />
+          ))}
       </div>
     );
   }
