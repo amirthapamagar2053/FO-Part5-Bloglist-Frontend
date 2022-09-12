@@ -5,6 +5,7 @@ let token = null;
 
 const setToken = (newToken) => {
   token = `bearer ${newToken}`;
+  console.log("the middleware token is", token);
 };
 
 const getAll = () => {
@@ -20,9 +21,14 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const update = (id, newObject) =>{
-  const request = axios.put(`${baseUrl}/${id}`,newObject)
-  return request.then((response) => response.data)
-}
+const update = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject);
+  return request.then((response) => response.data);
+};
 
-export default { getAll, create, setToken,update };
+const remove = async (id) => {
+  const response = await axios.delete(`${baseUrl}/${id}`);
+  return response.data;
+};
+
+export default { getAll, create, setToken, update, remove };

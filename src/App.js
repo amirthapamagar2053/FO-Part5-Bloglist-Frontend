@@ -69,6 +69,7 @@ const App = () => {
         password,
       });
       window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
+      blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -93,6 +94,24 @@ const App = () => {
       setBlogs(blogs.map((blog) => (blog.id === result.id ? result : blog))); //Sending the update blog in the blogs State
     } catch (exception) {
       setNotification(`${exception.response.data.error}`);
+    }
+  };
+
+  const handleDeleteBlog = async (id) => {
+    console.log(id);
+    if (
+      window.confirm(
+        `Remove blog. You're not going to need it! by ${user.name}`
+      )
+    ) {
+      try {
+        console.log("inside");
+        const response = await blogService.remove(id);
+        console.log(response)
+        setBlogs(blogs.filter((b) => b.id !== id));
+      } catch (exception) {
+        setNotification(`${exception.response.data.error}`);
+      }
     }
   };
 
@@ -143,7 +162,7 @@ const App = () => {
           {blogs
             // .filter((blog) => blog.user.username === user.username)
             .sort((a, b) => b.likes - a.likes).map((blog) => (
-              <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog}/>
+              <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} handleDeleteBlog={handleDeleteBlog}/>
             ))}
       </div>
     );
